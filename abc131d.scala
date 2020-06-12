@@ -1,0 +1,56 @@
+object Main extends App {
+	val pw = new java.io.PrintWriter(System.out)
+
+	@scala.annotation.tailrec
+	def loop(start: Int, end: Int)(f: Int => Unit): Unit =
+		if (start < end) {
+			f(start)
+			loop(start + 1, end)(f)
+		}
+
+	val ok = Seq.fill(Scanner.nextInt)((Scanner.nextInt, Scanner.nextInt)).sortBy(_._2).foldLeft(Some(0): Option[Int]) {
+		case (Some(now), (a, b)) if (now + a <= b) => Some(now + a)
+		case _ => None
+	}.isDefined
+
+	pw.println(if (ok) "Yes" else "No")
+	pw.flush()
+}
+
+object Scanner {
+	private val buf = new Array[Byte](1024); private var ptr = 0; private var len = 0
+
+	@inline private def isPrintableChar(c: Int): Boolean = 33 <= c && c <= 126
+	@inline private def hasNextByte(): Boolean = if (ptr >= len) { ptr = 0; len = System.in.read(buf); len > 0 } else true
+	@inline private def hasNext(): Boolean = {
+		while (hasNextByte() && !isPrintableChar(buf(ptr))) ptr += 1
+		hasNextByte()
+	}
+	@inline private def readByte(): Byte = if (hasNextByte()) { val res = buf(ptr); ptr += 1; res } else -1
+
+	def next(): String = {
+		if(!hasNext()) ???
+		val sb = new StringBuilder; var b = readByte()
+		while (isPrintableChar(b)) { sb.append(b.toChar); b = readByte() }
+		sb.toString
+	}
+
+	def nextInt(): Int = {
+		val n = nextLong()
+		if (n < Int.MinValue || Int.MaxValue < n) ???
+		n.toInt
+	}
+
+	def nextLong(): Long = {
+		if(!hasNext()) ???
+		var minus = false; var b = readByte()
+		if (b == '-') { minus = true; b = readByte() }
+
+		@scala.annotation.tailrec
+		def go (b: Byte, n: Long = 0): Long = if ('0' <= b && b <= '9') go(readByte(), n * 10 + b - '0') else if (minus) -n else n
+
+		go(b)
+	}
+
+	def nextDouble(): Double = next().toDouble
+}
