@@ -8,40 +8,9 @@ object Main extends App {
 			loop(start + 1, end)(f)
 		}
 
-	val n	   = Scanner.nextInt
-	val x, y = Scanner.nextInt + 200
-	val maze = Array.fill(401)(Array.fill(401)(true))
-	maze(200)(200) = false
+	val n = Scanner.nextInt
 
-	val N = Math.max(x, y)
-
-	loop(0, n) { _ =>
-		val a, b = Scanner.nextInt + 200
-		maze(b)(a) = false
-	}
-
-	val answers = scala.collection.mutable.ListBuffer.empty[Int]
-	val depth = Array.tabulate(401)(maze(_).clone) map (_ map (if (_) 0 else -1))
-
-	def bfs(seq : Seq[(Int, Int)]): Unit = seq match {
-		case (p, q) :: tail => {
-			if (p == x && q == y) answers += depth(q)(p)+1
-			maze(q)(p) = false
-
-			val ds = Seq((p+1, q+1), (p, q+1), (p-1, q+1), (p+1, q), (p-1, q), (p, q-1)).filter { case (i, j) =>
-				0 <= i && i <= N && 0 <= j && j <= N && depth(j)(i) == 0 && maze(j)(i)
-			}
-
-			ds foreach { case (i, j) => depth(j)(i) = depth(q)(p) + 1 }
-
-			bfs(tail ++ ds)
-		}
-		case _ => ()
-	}
-
-	bfs(Seq((200, 200)))
-
-	pw.println(if (answers.isEmpty) -1 else answers.min)
+	pw.println(n)
 	pw.flush()
 }
 
