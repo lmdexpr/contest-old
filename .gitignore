@@ -2,3 +2,5 @@
 *.log
 
 .metals
+
+.tags1
