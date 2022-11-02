@@ -4,3 +4,6 @@
 .metals
 
 .tags1
+
+_build
+_opam
